@@ -1,5 +1,13 @@
 # vs
 .vs/
+*.user
+*.userosscache
+*.suo
+*.vcxproj
+*.vcxproj.user
+packages/
+*.nupkg
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
