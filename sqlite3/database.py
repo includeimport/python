@@ -1,6 +1,5 @@
 # https://www.youtube.com/watch?v=byHcYRpMgI4
 
-
 # import sqlite3
 
 # # connect to database
