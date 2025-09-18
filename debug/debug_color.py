@@ -6,5 +6,16 @@ class Text_Color(Enum):
     GRENN = "\033[32m"
     YELLOW = "\033[33m"
 
+class Debug:
+    def fail(text):
+        print(f"{Text_Color.RED.value}[Fail]: {text}{Text_Color.RESET.value}")
 
-print(f"{Text_Color.GRENN.value}Test_Green{Text_Color.RESET.value}")
+    def success(text):
+        print(f"{Text_Color.GRENN.value}[Success]: {text}{Text_Color.RESET.value}")
+
+    def log(text):
+        print(f"{Text_Color.YELLOW.value}[Log]: {text}{Text_Color.RESET.value}")
+
+#print(f"{Text_Color.GRENN.value}Test_Green{Text_Color.RESET.value}")
+
+Debug.success("testing")
