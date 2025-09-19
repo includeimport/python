@@ -1,5 +1,5 @@
 from enum import Enum
-import inspect
+import sys
 import os
 from types import FrameType
 
@@ -11,11 +11,20 @@ class Text_Color(Enum):
     CYAN = "\033[36m"
 
 class Debug:
+    def get_frame(self):
+        """
+
+        """
+        frame = sys._getframe()
+        while frame.f_back and frame.f_back.f_back:
+            frame = frame.f_back
+        return frame
 
     def get_frame_info(self, frame: FrameType):
         """
         호출한 함수의 이름, 파일명, 줄 번호 반환
         """
+        
         func_name = frame.f_code.co_name
         full_path = frame.f_code.co_filename
         file_name = os.path.basename(full_path)
@@ -29,8 +38,8 @@ class Debug:
     def debug_text(self, title, text, frame: FrameType):
         func_name, file_name, line_no = frame
         output_text = (
-            f"[{title}]: {text}"
-            f" (File \"{file_name}\", line {line_no} in \"{func_name}\")"
+            f"[{title}]:{text} "
+            f"(File \"{file_name}\", line {line_no} in \"{func_name}\")"
 
         )
         return output_text
@@ -40,10 +49,26 @@ class Debug:
         self.print_with_color(Text_Color.CYAN, modified_text)
 
     def check(self, text):
-        modified_text = self.debug_text("check", text, self.get_frame_info(inspect.currentframe()))
+        frame = self.get_frame_info(sys._getframe(0))
+        modified_text = self.debug_text("Check", text, frame)
         self.print_with_color(Text_Color.CYAN, modified_text)
+
+    def error_simple(self, text):
+        modified_text = (f"[Error]: {text}")
+        self.print_with_color(Text_Color.RED, modified_text)
+
+    def error(self):
+        frame_data = self.get_frame_info(sys._getframe(1))
+        modified_text = self.debug_text("Error", "", frame_data)
+        self.print_with_color(Text_Color.RED, modified_text)
 
 obj = Debug()
 obj.check_simple("simple test")
 obj.check("deep test")
 
+def test():
+    data = 1
+    if data > 0:
+        obj.error()
+
+test()
