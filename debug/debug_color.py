@@ -26,19 +26,24 @@ class Debug:
     def print_with_color(self, color: Text_Color, text):
         print(f"{color.value}{text}{Text_Color.RESET.value}")
         
-    def simple_check(self, text):
-        self.print_with_color(Text_Color.CYAN, text)
+    def debug_text(self, title, text, frame: FrameType):
+        func_name, file_name, line_no = frame
+        output_text = (
+            f"[{title}]: {text}"
+            f" (File \"{file_name}\", line {line_no} in \"{func_name}\")"
+
+        )
+        return output_text
+
+    def check_simple(self, text):
+        modified_text = (f"[Check]: {text}")
+        self.print_with_color(Text_Color.CYAN, modified_text)
 
     def check(self, text):
-        func_name, file_name, line_no = self.get_frame_info(inspect.currentframe())
-        edit_text = (
-                f"[Check]: {text}"
-                f" (File \"{file_name}\", line {line_no} in \"{func_name}\")"
-
-            )
-        self.print_with_color(Text_Color.CYAN, edit_text)
+        modified_text = self.debug_text("check", text, self.get_frame_info(inspect.currentframe()))
+        self.print_with_color(Text_Color.CYAN, modified_text)
 
 obj = Debug()
-obj.simple_check("simple test")
+obj.check_simple("simple test")
 obj.check("deep test")
 
