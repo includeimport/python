@@ -32,43 +32,37 @@ class Debug:
 
         return (func_name, file_name, line_no)
 
+    def format_text_color(self, color: Text_Color, text):
+        return f"{color.value}{text}{Text_Color.RESET.value}"
+
     def print_with_color(self, color: Text_Color, text):
         print(f"{color.value}{text}{Text_Color.RESET.value}")
         
-    def debug_text(self, title, text, frame: FrameType):
+    def debug_text(self, frame: FrameType):
         func_name, file_name, line_no = frame
         output_text = (
-            f"[{title}]:{text} "
             f"(File \"{file_name}\", line {line_no} in \"{func_name}\")"
 
         )
         return output_text
 
-    def check_simple(self, text):
-        modified_text = (f"[Check]: {text}")
-        self.print_with_color(Text_Color.CYAN, modified_text)
+    def error(self, text):
+        frame = self.get_frame()
+        frame_data = self.get_frame_info(frame)
 
-    def check(self, text):
-        frame = self.get_frame_info(sys._getframe(0))
-        modified_text = self.debug_text("Check", text, frame)
-        self.print_with_color(Text_Color.CYAN, modified_text)
-
-    def error_simple(self, text):
-        modified_text = (f"[Error]: {text}")
+        edited_text = f"[Error]: {text} "
+        modified_text = self.format_text_color(Text_Color.RED, edited_text) + self.debug_text(frame_data)
         self.print_with_color(Text_Color.RED, modified_text)
 
-    def error(self):
-        frame_data = self.get_frame_info(sys._getframe(1))
-        modified_text = self.debug_text("Error", "", frame_data)
-        self.print_with_color(Text_Color.RED, modified_text)
+    def test(self, text):
+        print(self.format_text_color(Text_Color.CYAN, text))
 
 obj = Debug()
-obj.check_simple("simple test")
-obj.check("deep test")
 
 def test():
     data = 1
     if data > 0:
-        obj.error()
+        obj.error("test func failed")
+        obj.test("hello")
 
 test()
